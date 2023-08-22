@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+bool isValidString(const char *str)
+{
+    for (int i = 0; str[i] != '\0'; i++)
+	 {
+        if (!((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z'))) 
+		{
+            return false; 
+        }
+    }
+    return true;
+}
+int main()
+ {
+    char str1[] = "HelloWorld";
+    char str2[] = "Valid123";
+    char str3[] = "NotValid!";
+    printf("String '%s' is %svalid.\n", str1, isValidString(str1) ? "" : "not ");
+    printf("String '%s' is %svalid.\n", str2, isValidString(str2) ? "" : "not ");
+    printf("String '%s' is %svalid.\n", str3, isValidString(str3) ? "" : "not ");    
+    return 0;
+}
