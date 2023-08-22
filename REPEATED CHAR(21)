@@ -1,0 +1,31 @@
+#include <stdio.h>
+void printRepeatingIndexes(char arr[], int size) {
+    int visited[256] = {0};
+    int indexes[256][size];
+    int indexCount[256] = {0};
+    for (int i = 0; i < size; i++) {
+        int charIndex = (int)arr[i];
+        if (visited[charIndex] > 0) {
+            indexes[charIndex][indexCount[charIndex]] = i;
+            indexCount[charIndex]++;
+        }
+        visited[charIndex]++;
+    }
+    printf("Indexes of repeated characters:\n");
+    for (int i = 0; i < 256; i++) {
+        if (visited[i] > 1) {
+            printf("Character '%c' (ASCII %d): ", (char)i, i);
+            for (int j = 0; j < indexCount[i]; j++) {
+                printf("%d ", indexes[i][j]);
+            }
+            printf("\n");
+        }
+    }
+}
+int main() {
+    char arr[] = "programming";
+    int size = sizeof(arr) / sizeof(arr[0]);
+    printf("Input array: %s\n", arr);
+    printRepeatingIndexes(arr, size);
+    return 0;
+}
