@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+struct Node {
+    char data;
+    struct Node *next;
+};
+struct Node *getNode(char data) {
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+void insertNode(struct Node **head, char data) {
+    struct Node *newNode = getNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+    struct Node *current = *head;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = newNode;
+}
+bool isPalindrome(struct Node *head) {
+    if (head == NULL) {
+        return true;
+    }
+    struct Node *slowPtr = head;
+    struct Node *fastPtr = head;
+    struct Node *prevSlowPtr = NULL;
+    struct Node *midNode = NULL;
+    while (fastPtr != NULL && fastPtr->next != NULL) {
+        fastPtr = fastPtr->next->next;
+        prevSlowPtr = slowPtr;
+        slowPtr = slowPtr->next;
+    }
+    if (fastPtr != NULL) {
+        midNode = slowPtr;
+        slowPtr = slowPtr->next;
+    }
+    struct Node *secondHalf = slowPtr;
+    prevSlowPtr->next = NULL;
+    struct Node *prev = NULL;
+    struct Node *current = secondHalf;
+    struct Node *nextNode;
+    while (current != NULL) {
+        nextNode = current->next;
+        current->next = prev;
+        prev = current;
+        current = nextNode;
+    }
+    secondHalf = prev;
+    struct Node *firstHalf = head;
+    while (firstHalf != NULL && secondHalf != NULL) {
+        if (firstHalf->data != secondHalf->data) {
+            return false;
+        }
+        firstHalf = firstHalf->next;
+        secondHalf = secondHalf->next;
+    }
+    return true;
+}
+int main() {
+    struct Node *head = NULL;
+    insertNode(&head, 'r');
+    insertNode(&head, 'a');
+    insertNode(&head, 'd');
+    insertNode(&head, 'a');
+    insertNode(&head, 'r');
+    printf("Linked List: r -> a -> d -> a -> r\n");
+    if (isPalindrome(head)) {
+        printf("The linked list is a palindrome.\n");
+    } else {
+        printf("The linked list is not a palindrome.\n");
+    }
+    return 0;
+}
