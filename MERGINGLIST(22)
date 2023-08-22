@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node *next;
+};
+struct Node *getNode(int data) {
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+void insertNode(struct Node **head, int data) {
+    struct Node *newNode = getNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+    struct Node *current = *head;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = newNode;
+}
+struct Node *mergeLists(struct Node *list1, struct Node *list2) {
+    struct Node *mergedList = NULL;
+    if (list1 == NULL) {
+        return list2;
+    }
+    if (list2 == NULL) {
+        return list1;
+    }
+    if (list1->data <= list2->data) {
+        mergedList = list1;
+        mergedList->next = mergeLists(list1->next, list2);
+    } else {
+        mergedList = list2;
+        mergedList->next = mergeLists(list1, list2->next);
+    }
+    return mergedList;
+}
+void printList(struct Node *head) {
+    struct Node *current = head;
+    while (current != NULL) {
+        printf("%d -> ", current->data);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+int main() {
+    struct Node *list1 = NULL;
+    insertNode(&list1, 10);
+    insertNode(&list1, 20);
+    insertNode(&list1, 30);
+    struct Node *list2 = NULL;
+    insertNode(&list2, 15);
+    insertNode(&list2, 25);
+    insertNode(&list2, 35);
+    printf("List 1: 10 -> 20 -> 30 -> NULL\n");
+    printf("List 2: 15 -> 25 -> 35 -> NULL\n");
+    struct Node *mergedList = mergeLists(list1, list2);
+    printf("Merged List: ");
+    printList(mergedList);
+    return 0;
+}
