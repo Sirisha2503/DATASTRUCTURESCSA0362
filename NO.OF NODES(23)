@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node *next;
+};
+int countNodes(struct Node *head) {
+    int count = 0;
+    struct Node *current = head;
+    while (current != NULL) {
+        count++;
+        current = current->next;
+    }   
+    return count;
+}
+void insertNode(struct Node **head, int data) {
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = *head;
+    *head = newNode;
+}
+void printList(struct Node *head) {
+    struct Node *current = head;   
+    while (current != NULL) {
+        printf("%d -> ", current->data);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+int main() {
+    struct Node *head = NULL;
+    insertNode(&head, 10);
+    insertNode(&head, 20);
+    insertNode(&head, 30);
+    insertNode(&head, 40);
+    insertNode(&head, 50);
+    printf("Linked List: ");
+    printList(head);
+    int nodeCount = countNodes(head);
+    printf("Number of nodes in the linked list: %d\n", nodeCount);    
+    return 0;
+}
