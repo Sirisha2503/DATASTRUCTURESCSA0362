@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node *next;
+};
+struct Node *getNode(int data) {
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+void insertNode(struct Node **head, int data) {
+    struct Node *newNode = getNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }   
+    struct Node *current = *head;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = newNode;
+}
+int findLength(struct Node *head) {
+    int length = 0;
+    struct Node *current = head;
+    while (current != NULL) {
+        length++;
+        current = current->next;
+    }
+    return length;
+}
+struct Node *getIntersectionPoint(struct Node *list1, struct Node *list2) {
+    int length1 = findLength(list1);
+    int length2 = findLength(list2);
+    int diff = abs(length1 - length2);
+    struct Node *longerList = (length1 > length2) ? list1 : list2;
+    struct Node *shorterList = (length1 > length2) ? list2 : list1;
+    for (int i = 0; i < diff; i++) {
+        longerList = longerList->next;
+    }
+    while (longerList != NULL && shorterList != NULL) {
+        if (longerList == shorterList) {
+            return longerList;
+        }
+        longerList = longerList->next;
+        shorterList = shorterList->next;
+    }   
+    return NULL;
+}
+int main() {
+    struct Node *list1 = NULL;
+    insertNode(&list1, 10);
+    insertNode(&list1, 20);
+    insertNode(&list1, 30);
+    insertNode(&list1, 40);
+    struct Node *list2 = NULL;
+    insertNode(&list2, 50);
+    insertNode(&list2, 60);    
+    list2->next->next = list1->next->next;
+    printf("List 1: 10 -> 20 -> 30 -> 40 -> NULL\n");
+    printf("List 2: 50 -> 60 -> 30 -> 40 -> NULL (Intersection point)\n");
+    struct Node *intersection = getIntersectionPoint(list1, list2);
+    if (intersection != NULL) {
+        printf("Intersection point: %d\n", intersection->data);
+    } else {
+        printf("No intersection point found.\n");
+    }    
+    return 0;
+}
