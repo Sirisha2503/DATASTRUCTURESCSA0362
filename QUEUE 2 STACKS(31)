@@ -1,0 +1,83 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+struct QueueNode {
+    int data;
+    struct QueueNode* next;
+};
+struct Queue {
+    struct QueueNode* front;
+    struct QueueNode* rear;
+};
+struct Stack {
+    struct Queue* queue1;
+    struct Queue* queue2;
+};
+struct Queue* createQueue() {
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->front = NULL;
+    queue->rear = NULL;
+    return queue;
+}
+struct QueueNode* createNode(int data) {
+    struct QueueNode* node = (struct QueueNode*)malloc(sizeof(struct QueueNode));
+    node->data = data;
+    node->next = NULL;
+    return node;
+}
+void enqueue(struct Queue* queue, int data) {
+    struct QueueNode* newNode = createNode(data);
+    if (queue->rear == NULL) {
+        queue->front = newNode;
+        queue->rear = newNode;
+    } else {
+        queue->rear->next = newNode;
+        queue->rear = newNode;
+    }
+}
+int dequeue(struct Queue* queue) {
+    if (queue->front == NULL) {
+        printf("Queue is empty.\n");
+        return -1;
+    }
+    struct QueueNode* temp = queue->front;
+    int data = temp->data;
+    queue->front = queue->front->next;
+    if (queue->front == NULL) {
+        queue->rear = NULL;
+    }
+    free(temp);
+    return data;
+}
+void push(struct Stack* stack, int data) {
+    if (stack->queue1->front == NULL) {
+        enqueue(stack->queue1, data);
+    } else {
+        enqueue(stack->queue2, data);
+        while (stack->queue1->front != NULL) {
+            enqueue(stack->queue2, dequeue(stack->queue1));
+        }
+        struct Queue* temp = stack->queue1;
+        stack->queue1 = stack->queue2;
+        stack->queue2 = temp;
+    }
+}
+int pop(struct Stack* stack) {
+    if (stack->queue1->front == NULL) {
+        printf("Stack is empty.\n");
+        return -1;
+    }
+    return dequeue(stack->queue1);
+}
+int main() {
+    struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
+    stack->queue1 = createQueue();
+    stack->queue2 = createQueue();
+    push(stack, 10);
+    push(stack, 20);
+    push(stack, 30);
+    printf("Popped: %d\n", pop(stack));
+    printf("Popped: %d\n", pop(stack));
+    printf("Popped: %d\n", pop(stack));
+    return 0;
+}
