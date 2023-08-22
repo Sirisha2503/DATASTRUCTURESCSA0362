@@ -1,0 +1,44 @@
+#include <stdio.h>
+void findMissingElements(int arr[], int size, int min, int max) 
+{
+    int *present = (int *)malloc(max - min + 1, sizeof(int));
+    for (int i = 0; i < size; i++)
+	 {
+        present[arr[i] - min] = 1;
+    }
+    printf("Missing elements in the array: ");
+    for (int i = 0; i < max - min + 1; i++) 
+	{
+        if (!present[i]) 
+		{
+            printf("%d ", i + min);
+        }
+    }
+    printf("\n");
+    free(present);
+}
+int main()
+ {
+    int arr[] = {3, 7, 1, 9, 4, 2};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    int min = arr[0];
+    int max = arr[0];
+    for (int i = 0; i < size; i++)
+	 {
+        if (arr[i] < min) 
+		{
+            min = arr[i];
+        }
+        if (arr[i] > max) {
+            max = arr[i];
+        }
+    }
+    printf("Original array: ");
+    for (int i = 0; i < size; i++) 
+	{
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    findMissingElements(arr, size, min, max);
+    return 0;
+}
